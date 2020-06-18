@@ -9,11 +9,7 @@ class AppRunner {
 
     attachListeners() {
         document.getElementById('submit-button').addEventListener("click", function() {
-            const params = this.getParams();
-            if (this.validateParams(params)) {
-                const url = this.getUrl(params);
-                this.getFlights(url);
-            }
+            this.onSubmit();
         }.bind(this));
         document.querySelectorAll(".required").forEach( function(i) {
             i.addEventListener("focus", function() {
@@ -23,6 +19,13 @@ class AppRunner {
         document.getElementById('switch').addEventListener("click", function() {
             this.switchCities();
         }.bind(this));
+    }
+
+    onSubmit() {
+        const params = this.getParams();
+        if (this.validateParams(params)) {
+            this.getFlights(params);
+        }
     }
 
     getParams() {
@@ -62,22 +65,41 @@ class AppRunner {
     }
 
     getUrl(p) {
-        let url = `${this.baseUrl}/${p.origin}/${p.destination}/${p.outboundDate}/`;
-        if (!!p.inboundDate) {
-            url += `${p.inboundDate}`;
-        }
-        return url;
+        return `${this.baseUrl}/${p.origin}/${p.destination}/${p.outboundDate}`;
     }
 
-    getFlights(url) {
+    getReturnUrl(p) {
+        const origin = p.origin;
+        p.origin = p.destination;
+        p.destination = origin;
+        p.outboundDate = p.inboundDate;
+        return this.getUrl(p);
+    }
+
+    getFlights(params) {
         this.showSpinner()
             .then( spinner => {
+                const url = this.getUrl(params);
                 return this.get(url);
             })
             .then( res => {
-                this.renderResponse(JSON.parse(res));
+                return this.renderResponse(JSON.parse(res));
             })
-            .then( res => {
+            .then( hadErrors => {
+                if (!!params.inboundDate && !hadErrors) {
+                    const url = this.getReturnUrl(params);
+                    return this.get(url);
+                } else {
+                    return null;
+                }
+            })
+            .then ( res => {
+                if (!res) {
+                    return null;
+                }
+                this.renderReturnResponse(JSON.parse(res));
+            })
+            .then( () => {
                 return this.removeSpinner();
             })
             .catch( err => {
@@ -89,9 +111,17 @@ class AppRunner {
 
     renderResponse(response) {
         this.removeAllChildNodes(document.querySelector("#response .flight-info"));
+        return this._renderResponse(response);
+    }
 
+    renderReturnResponse(response) {
+        this.addBreak();
+        return this._renderResponse(response);
+    }
+
+    _renderResponse(response) {
         if (this.renderError(response, document.querySelector("#response .error"))) {
-            return;
+            return true;
         }
 
         for (let quote of response.Quotes) {
@@ -122,7 +152,6 @@ class AppRunner {
     }
 
     renderQuote(quote, response) {
-        // opportunity to dry this up
         let infoParent = document.querySelector("#response .flight-info");
         let container = document.createElement('div');
         let info1 = document.createElement('div');
@@ -140,25 +169,14 @@ class AppRunner {
         container.appendChild(info1);
         container.appendChild(info2);
         infoParent.appendChild(container);
-        if (quote.InboundLeg) {
-            info.innerText = 'Inbound- ' + info.innerText;
-            let rContainer = document.createElement('div');
-            let rInfo1 = document.createElement('div');
-            let rInf02 = document.createElement('div');
-            rContainer.setAttribute('class', 'info');
-            rInfo1.setAttribute('class', 'leader');
-            rInfo2.setAttribute('class', 'follower');
-            const rCarrier = response.Carriers.find( c => c.CarrierId == quote.InboundLeg.CarrierIds[0] );
-            const rPrice = price;
-            const rDirect = direct;
-            const rFrom = response.Places.find( p => p.PlaceId == quote.InboundLeg.OriginId );
-            const rTo = response.Places.find( p => p.PlaceId == quote.InboundLeg.DestinationId );
-            rInfo1.innerHTML = `<span class="price">${rPrice}: </span><span class="trip">${rFrom.Name} &#x279C; ${rTo.Name}</span>`;
-            rInfo2.innerHTML = `<span class="carrier">${rDirect} through ${rCarrier.Name}</span>`;
-            rContainer.appendChild(info1);
-            rContainer.appendChild(info2);
-            infoParent.appendChild(rContainer);
-        }
+    }
+
+    addBreak() {
+        const infoParent = document.querySelector("#response .flight-info");
+        let lineBreak = document.createElement('div');
+        lineBreak.setAttribute('class', 'line-break');
+        lineBreak.innerText = "-- Return Flight Information --";
+        infoParent.appendChild(lineBreak);
     }
 
     removeAllChildNodes(parent) {
