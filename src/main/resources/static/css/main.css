@@ -1,6 +1,7 @@
 body {
     overflow-x: hidden;
     overflow-y: auto;
+    background: #eee;
 }
 
 .header {
@@ -34,7 +35,7 @@ body {
 }
 
 label {
-    color: rebeccapurple;
+    color: #444;
 }
 
 .input:focus {
@@ -42,10 +43,27 @@ label {
     border: 1px solid rebeccapurple;
 }
 
+.input.form-control {
+    color: rebeccapurple;
+}
+
 .error {
     position: absolute;
     color: indianred;
     font-style: italic;
+}
+
+#switch {
+    display: inline-block;
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    bottom: -2em;
+    font-size: 1.25em;
+    font-weight: 700;
+    color: rebeccapurple;
+    cursor: pointer;
+    letter-spacing: -2px;
 }
 
 .airport {
@@ -73,22 +91,21 @@ label {
 .info {
     padding-top: 1em;
     font-size: 1.2em;
-    color: steelblue;
+    color: #444;
 }
 
 .leader {
     font-weight: 600;
-    color: steelblue;
 }
 
 .price {
     font-size: 1.2em;
+    color: darkgreen;
 }
 
 .follower {
     font-style: italic;
     margin-left: 2em;
-    color: rebeccapurple;
 }
 
 .hidden {

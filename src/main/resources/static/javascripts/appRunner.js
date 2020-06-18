@@ -20,6 +20,9 @@ class AppRunner {
                 i.parentElement.querySelector(".error").innerText = "";
             }.bind(this));
         });
+        document.getElementById('switch').addEventListener("click", function() {
+            this.switchCities();
+        }.bind(this));
     }
 
     getParams() {
@@ -162,6 +165,15 @@ class AppRunner {
         while (parent.firstChild) {
             parent.removeChild(parent.firstChild);
         }
+    }
+
+    switchCities() {
+        const origin = document.getElementById("origin-city");
+        const dest = document.getElementById("destination-city");
+        const originValue = origin.value;
+        const destValue = dest.value;
+        origin.value = destValue;
+        dest.value = originValue;
     }
 
     get(url) {

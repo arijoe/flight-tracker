@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller {
 
     String host = "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com";
-    String key = "e4dabae40emsh90f58866c571a5cp1e5090jsn121b08c88723";
+    String key = Secret.getKey();
 
     @Autowired
     public Controller() {}
