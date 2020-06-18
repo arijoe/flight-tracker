@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS  -->
+    <link rel="stylesheet" type="text/css" href="css/datepicker.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <!-- Title -->
+    <title>Ari Weitzman - FlightFinder</title>
+    <link rel="shortcut icon" type="image/png" href="/assets/airplane-take-off.png">
+    <!-- JavaScript for Bootstrap functions -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/datepicker.js"></script>
+    <!-- Program Scripts -->
+    <script src="/javascripts/index.js"></script>
+    <script src="/javascripts/appRunner.js"></script>
+    <script>
+        $(function(){
+            $("#inbound-date").datepicker({
+                'format': 'yyyy-mm-dd',
+                'autoclose': true
+            });
+            $("#outbound-date").datepicker({
+                'format': 'yyyy-mm-dd',
+                'autoclose': true
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <div class="loadingDiv"><div class="loader"></div></div>
+
+    <div class="header">
+        <h1>Flight Finder</h1>
+    </div>
+
+    <div class="container">
+        <div class="cities">
+            <label>Origin</label>
+            <input type="text" id="origin-city" class="form-control airport input required" maxlength="3" placeholder="eg 'ORD'"/>
+            <span class="error" id="origin-err"></span>
+        </div>
+
+        <div class="cities">
+            <label>Destination</label>
+            <input type="text" id="destination-city" class="form-control airport input required" maxlength="3" placeholder="eg 'MAD'"/>
+            <span class="error" id="dest-err"></span>
+        </div>
+
+        <div class="dates">
+            <label>Outbound Date</label>
+            <input type="text" autocomplete="off" id="outbound-date" class="form-control input required" placeholder="yyyy-mm-dd"/>
+            <span class="error" id="out-err"></span>
+        </div>
+
+        <div class="dates">
+            <label>Inbound Date (optional)</label>
+            <input type="text" autocomplete="off" id="inbound-date" class="form-control input" placeholder="yyyy-mm-dd"/>
+        </div>
+
+        <div class="submit">
+            <button id="submit-button" class="primary form-control">SUBMIT</button>
+        </div>
+    </div>
+
+    <div id="response">
+        <div class="errors row">
+            <span class="error"></span>
+        </div>
+        <div class="flight-info row">
+        </div>
+    </div>
+</body>
+</html>

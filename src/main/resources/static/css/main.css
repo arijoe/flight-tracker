@@ -1,0 +1,155 @@
+body {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.header {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0 2em;
+    color: rebeccapurple;
+}
+
+.container, #response {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    max-width: 1200px;
+    width: 100%;
+    padding: 2em 10vw;
+    min-height: 350px;
+    margin-top: -2em;
+}
+
+.container div {
+    position: relative;
+    padding-top: 1.75em;
+}
+
+.primary {
+    background: rebeccapurple;
+    color: white;
+}
+
+label {
+    color: rebeccapurple;
+}
+
+.input:focus {
+    box-shadow: none;
+    border: 1px solid rebeccapurple;
+}
+
+.error {
+    position: absolute;
+    color: indianred;
+    font-style: italic;
+}
+
+.airport {
+    text-transform: uppercase;
+}
+
+.primary:hover, .primary:focus {
+    background: white;
+    color: rebeccapurple;
+    border: 1px solid rebeccapurple;
+    box-shadow: none;
+}
+
+.row {
+    padding-bottom: 1.75em;
+    margin: 0;
+}
+
+.row, .info {
+    display: block;
+    width: 100%;
+    padding-top: 1em;
+}
+
+.info {
+    padding-top: 1em;
+    font-size: 1.2em;
+    color: steelblue;
+}
+
+.leader {
+    font-weight: 600;
+    color: steelblue;
+}
+
+.price {
+    font-size: 1.2em;
+}
+
+.follower {
+    font-style: italic;
+    margin-left: 2em;
+    color: rebeccapurple;
+}
+
+.hidden {
+    display: none;
+}
+
+/*LOADING MASK*/
+.loader,
+.loader:after {
+    border-radius: 50%;
+    width: 10em;
+    height: 10em;
+}
+
+.loader {
+    margin: 0 auto;
+    font-size: 10px;
+    position: relative;
+    top: 30%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    text-indent: -9999em;
+    border-top: 1.1em solid #ddd;
+    border-right: 1.1em solid #ddd;
+    border-bottom: 1.1em solid #ddd;
+    border-left: 1.1em solid rebeccapurple;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: load8 1.2s infinite linear;
+    animation: load8 1.2s infinite linear;
+}
+
+@-webkit-keyframes load8 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes load8 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+.loadingDiv {
+    position: fixed;
+    z-index: 1000;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+}
