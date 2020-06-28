@@ -16,6 +16,9 @@ class AppRunner {
                 i.parentElement.querySelector(".error").innerText = "";
             }.bind(this));
         });
+        document.getElementById("inbound-date").addEventListener("focus", function () {
+           document.querySelector(".dates.out .error").innerText = "";
+        });
         document.getElementById('switch').addEventListener("click", function() {
             this.switchCities();
         }.bind(this));
@@ -59,6 +62,9 @@ class AppRunner {
             isValid = false;
         } if (!params.outboundDate) {
             document.getElementById("out-err").innerText = errorText + " outbound date."
+            isValid = false;
+        } if (!!params.inboundDate && params.inboundDate < params.outboundDate) {
+            document.getElementById("out-err").innerText = "Inbound date must come after outbound date."
             isValid = false;
         }
         return isValid;
