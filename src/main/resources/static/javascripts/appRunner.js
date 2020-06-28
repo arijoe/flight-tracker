@@ -1,12 +1,26 @@
 "use strict;"
 
+/**
+ * @Class AppRunner
+ * @desc Manages front-end application and UI
+ */
 class AppRunner {
 
+    /**
+     * @Constructor - takes no parameters
+     */
     constructor() {
+        /**
+         * @type {string} - defines baseUrl for invoking Web API
+         * @desc Class Variable
+         */
         this.baseUrl = "/api/flights";
         this.attachListeners();
     }
 
+    /**
+     * @desc attaches event listeners for user actions: form submission, field focuses, and switching inbound/outbound
+     */
     attachListeners() {
         document.getElementById('submit-button').addEventListener("click", function() {
             this.onSubmit();
@@ -24,6 +38,9 @@ class AppRunner {
         }.bind(this));
     }
 
+    /**
+     * @desc Runs on user submission. Validates input, and if valid, calls getFlights().
+     */
     onSubmit() {
         const params = this.getParams();
         if (this.validateParams(params)) {
@@ -31,6 +48,10 @@ class AppRunner {
         }
     }
 
+    /**
+     * @desc gets parameters from user input fields
+     * @returns {{outboundDate: *, origin: *, inboundDate: *, destination: *}}
+     */
     getParams() {
         return {
             "origin": this.getValueFromForm("origin-city"),
@@ -40,6 +61,11 @@ class AppRunner {
         }
     }
 
+    /**
+     * @desc gets a value from a given input field
+     * @param formId {string} HTML Id for a form field
+     * @returns {null || String}
+     */
     getValueFromForm(formId) {
         if (!formId || !document.getElementById(formId)) {
             return null
@@ -47,6 +73,11 @@ class AppRunner {
         return document.getElementById(formId).value;
     }
 
+    /**
+     * @desc validates user input and renders errors, if any
+     * @param params {object} maps to input values
+     * @returns {boolean}
+     */
     validateParams(params) {
         const errorText = "You must enter a value for ";
         let isValid = true;
@@ -70,10 +101,20 @@ class AppRunner {
         return isValid;
     }
 
+    /**
+     * @desc builds and returns API endpoint URL based on given parameters
+     * @param p {object} contains input values
+     * @returns {string}
+     */
     getUrl(p) {
         return `${this.baseUrl}/${p.origin}/${p.destination}/${p.outboundDate}`;
     }
 
+    /**
+     * @desc builds and returns API endpoint for a return flight URL based on given parameters
+     * @param p {object} contains input values
+     * @returns {string}
+     */
     getReturnUrl(p) {
         const origin = p.origin;
         p.origin = p.destination;
@@ -82,6 +123,10 @@ class AppRunner {
         return this.getUrl(p);
     }
 
+    /**
+     * @desc Chains Promises to show spinner, render response of outbound, render response of inbound (if any), remove spinner, and catch/log errors
+     * @param params {object}
+     */
     getFlights(params) {
         this.showSpinner()
             .then( spinner => {
@@ -115,16 +160,31 @@ class AppRunner {
         );
     }
 
+    /**
+     * @desc shows response of API call in UI
+     * @param response {object}
+     * @returns {boolean}
+     */
     renderResponse(response) {
         this.removeAllChildNodes(document.querySelector("#response .flight-info"));
         return this._renderResponse(response);
     }
 
+    /**
+     * @desc shows response of second API call for returns flights in UI
+     * @param response {Object}
+     * @returns {boolean}
+     */
     renderReturnResponse(response) {
         this.addBreak();
         return this._renderResponse(response);
     }
 
+    /**
+     * @desc shows response in UI
+     * @param response {Object}
+     * @returns {boolean}
+     */
     _renderResponse(response) {
         if (this.renderError(response, document.querySelector("#response .error"))) {
             return true;
@@ -135,6 +195,12 @@ class AppRunner {
         }
     }
 
+    /**
+     * @desc renders errors from response in UI
+     * @param response {Object}
+     * @param error {HTMLElement}
+     * @returns {boolean}
+     */
     renderError(response, error) {
         document.querySelector("#response .errors").classList.add("hidden");
 
@@ -152,11 +218,21 @@ class AppRunner {
         return false;
     }
 
+    /**
+     * @desc renders error within HTML element
+     * @param error {HTMLElement}
+     * @param message {String}
+     */
     renderErrorMessage(error, message) {
         error.innerText = message;
         document.querySelector("#response .errors").classList.remove("hidden");
     }
 
+    /**
+     * @desc renders q given quote in the UI
+     * @param quote {object} Flight quote returned from web API
+     * @param response {object} Full JSON response Object
+     */
     renderQuote(quote, response) {
         let infoParent = document.querySelector("#response .flight-info");
         let container = document.createElement('div');
@@ -177,6 +253,9 @@ class AppRunner {
         infoParent.appendChild(container);
     }
 
+    /**
+     * @desc creates UI break between outbound and inbound flights
+     */
     addBreak() {
         const infoParent = document.querySelector("#response .flight-info");
         let lineBreak = document.createElement('div');
@@ -185,12 +264,19 @@ class AppRunner {
         infoParent.appendChild(lineBreak);
     }
 
+    /**
+     * @desc removes all children nodes of a given node
+     * @param parent {HTMLElement}
+     */
     removeAllChildNodes(parent) {
         while (parent.firstChild) {
             parent.removeChild(parent.firstChild);
         }
     }
 
+    /**
+     * @desc switches the origin and destination cities
+     */
     switchCities() {
         const origin = document.getElementById("origin-city");
         const dest = document.getElementById("destination-city");
@@ -200,13 +286,18 @@ class AppRunner {
         dest.value = originValue;
     }
 
+    /**
+     * @desc performs HTTP `GET` request
+     * @param url {string} REST endpoint
+     * @returns {Promise<XMLHttpRequest.response>}
+     */
     get(url) {
         return new Promise(function(resolve, reject) {
             var req = new XMLHttpRequest();
             req.open('GET', url);
             // resolve response of get
             req.onload = function() {
-                if (req.status == 200) {
+                if (req.status === 200) {
                     resolve(req.response);
                 }
                 else {
@@ -222,6 +313,10 @@ class AppRunner {
         });
     }
 
+    /**
+     * @desc shows the HTML/CSS Spinner
+     * @returns {Promise<boolean>}
+     */
     showSpinner() {
         return new Promise(function(resolve, reject) {
             let spinnerClass = 'loadingDiv';
@@ -240,6 +335,9 @@ class AppRunner {
         });
     }
 
+    /**
+     * @desc removes the HTML/CSS Spinner
+     */
     removeSpinner() {
         const loadingDiv = document.querySelector(".loadingDiv");
         document.querySelector("body").removeChild(loadingDiv);
