@@ -12,7 +12,8 @@ https://ari-flight-searcher.herokuapp.com</p>
 - Fill out the form, hit submit, and view matching quotes beneath the form entry.
 #### If running a local jar file
 - In the command line, navigate to the directory where the jar file is stored.
-- Run `java -jar FlightSearchApplication.jar PSU.Grad.Flight.Search.FlightSearchApplication`
+- Run `java -jar Flight-Search.jar`
+- Once the CLI outputs "Started FlightSearchApplication", point your browser to `localhost:8080`
 - Fill out the form, hit submit, and view matching quotes beneath the form entry.
 
 <p>A user can enter an origin and a destination airport code, as well as a departure date and optional return trip date, 
